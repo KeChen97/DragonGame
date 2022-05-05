@@ -3,10 +3,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.AWTException;
+import java.awt.Dimension;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JFrame;
 import org.junit.Test;
 
 /**
@@ -14,13 +16,18 @@ import org.junit.Test;
  */
 public class SnakeGameTest {
   private SnakeGameModel model;
-  private SnakeGameControllerWindow controlWindow;
+  private OptionView controlWindow;
   private Robot robot;
 
   @org.junit.Before
   public void setUp() throws Exception {
-    controlWindow = new SnakeGameControllerWindow();
-    model = new SnakeGameModel(1, 1);
+  //  controlWindow = new SnakeGameControllerWindow();
+    JFrame frame = new JFrame();
+    frame.setSize(700,800);
+    model = new SnakeGameModel();
+    model.setPreferredSize(new Dimension(700,700));
+    frame.add(model);
+    frame.setVisible(true);
     robot = new Robot();
   }
 
@@ -41,19 +48,20 @@ public class SnakeGameTest {
   }
 
   @Test
-  public void directionTest() throws AWTException {
-    controlWindow = new SnakeGameControllerWindow();
-    model = new SnakeGameModel(1, 1);
-    robot = new Robot();
-
+  public void directionTest() throws AWTException, InterruptedException {
     robot.keyPress(KeyEvent.VK_LEFT);
+    model.directionUpdated(KeyEvent.VK_LEFT);
+ //   System.out.println(KeyEvent.VK_LEFT);
 //    long start = System.nanoTime();
 //    long end = start = TimeUnit.SECONDS.toNanos(100);
-    try{Thread.sleep(600);} catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+//    try{Thread.sleep(400);} catch (InterruptedException e) {
+//      e.printStackTrace();
+//    }
 //    while(System.nanoTime() < end){
 //    }
+//    Thread.sleep(100);
+//    robot.keyRelease(KeyEvent.VK_LEFT);
+    Thread.sleep(200);
     assertEquals(Direction.LEFT,model.getDirection1());
   }
 

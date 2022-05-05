@@ -18,15 +18,13 @@ import javax.swing.Timer;
  *  <Purpose of the file>
  * The Model of the Snake Game.
  */
-public class SnakeGameModel extends JPanel implements ActionListener, KeyListener {
+public class SnakeGameModel extends JPanel  {
 
   /**
-   * Set up the panel, set the source of apple and snake images, and initialize the location of apple and snake.
+   * Set up the panel, set the source of apple and snake images
    */
-  public SnakeGameModel(int difficultyLevel, int numPlayer) {
-    // make the panel focusable so that it can react to keyboard inputs
-    this.setFocusable(true);
-    // Load the image from the internet
+  public SnakeGameModel() {
+    // Load the image
     try {
       background = ImageIO.read(new File("/Users/chen/Downloads/backg5.png"));
       title = ImageIO.read(new File("/Users/chen/Downloads/title2.png"));
@@ -38,10 +36,20 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
     } catch (Exception e) {
       System.out.println("url doesn't work");
     }
+    rnd = new Random();
+    setUp();
+  }
 
+  /**
+   * This function initialize the location of snakes and apple for the first round
+   */
+  public void setUp(){
+    gameoverP1 = false;
+    gameoverP2 = false;
+    player1Attack = false;
+    player2Attack = false;
     score2 = 0;
     score1 = 0;
-    rnd = new Random();
     // Init the location of the apple
     apple_loc = new Coordinate(200, 200);
     // Init the location of the snake.
@@ -60,34 +68,16 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
     snake2_loc.add(new Coordinate(300 + dot_size, 300));
     snake2_loc.add(new Coordinate(300 + 2 * dot_size, 300));
 
-    // initialize direction: snake1 to right, snake2 to left
+    // initialize direction: snake1 to up, snake2 to left
     direction1 = Direction.UP;
     direction2 = Direction.LEFT;
-
-    this.difficulty = difficultyLevel;
-    this.playerNumber = numPlayer;
-
-    // set up the alarm, which fires periodically (16 ms == 60fps).
-    // the time period depends on the difficulty level
-    // Every time it fires, we update the snake's location and repaint it.
-    if (difficulty == 1) {
-      timer = new Timer(timerEasy, this);
-    } else if (difficulty == 2) {
-      timer = new Timer(timerHard, this);
-    } else {
-      throw new IllegalStateException("Please choose difficulty level");
-    }
-    timer.start();
-    // register this panel as the keyboard event listener.
-    this.addKeyListener(this);
   }
 
-  public void setDifficulty(int difficultyLevel){
-    this.difficulty = difficultyLevel;
+  public static void setDifficulty(int difficultyLevel){difficulty = difficultyLevel;
   }
 
-  public void setPlayerNumber (int numPlayer){
-    this.playerNumber = numPlayer;
+  public static void setPlayerNumber(int numPlayer){
+    playerNumber = numPlayer;
   }
   /**
    * Paint background ,title and scores components,
@@ -203,28 +193,28 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
     if (direction == Direction.UP) {
       // up, if the snake touch the boundary, it will appear on the other side
       new_head_y -= dot_size;
-      if (new_head_y < title.getHeight(null) + SnakeGameControllerWindow.panelFrame) {
+      if (new_head_y < title.getHeight(null) + OptionView.panelFrame) {
         new_head_y =
-            title.getHeight(null) + SnakeGameControllerWindow.panelHeight - SnakeGameControllerWindow.panelFrame - dot_size;
+            title.getHeight(null) + OptionView.panelHeight - OptionView.panelFrame - dot_size;
       }
     } else if (direction == Direction.DOWN) {
       // down, if the snake touch the boundary, it will appear on the other side
       new_head_y += dot_size;
       if (new_head_y
-          > title.getHeight(null) + SnakeGameControllerWindow.panelHeight - SnakeGameControllerWindow.panelFrame - dot_size) {
-        new_head_y = title.getHeight(null) + SnakeGameControllerWindow.panelFrame;
+          > title.getHeight(null) + OptionView.panelHeight - OptionView.panelFrame - dot_size) {
+        new_head_y = title.getHeight(null) + OptionView.panelFrame;
       }
     } else if (direction == Direction.LEFT) {
       // left, if the snake touch the boundary, it will appear on the other side
       new_head_x -= dot_size;
-      if (new_head_x < SnakeGameControllerWindow.panelFrame) {
-        new_head_x = SnakeGameControllerWindow.panelWidth - SnakeGameControllerWindow.panelFrame - dot_size;
+      if (new_head_x < OptionView.panelFrame) {
+        new_head_x = OptionView.panelWidth - OptionView.panelFrame - dot_size;
       }
     } else if (direction == Direction.RIGHT) {
       // right, if the snake touch the boundary, it will appear on the other side
       new_head_x += dot_size;
-      if (new_head_x >= SnakeGameControllerWindow.panelWidth - SnakeGameControllerWindow.panelFrame) {
-        new_head_x = SnakeGameControllerWindow.panelFrame;
+      if (new_head_x >= OptionView.panelWidth - OptionView.panelFrame) {
+        new_head_x = OptionView.panelFrame;
       }
     }
 
@@ -307,21 +297,6 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
 
   }
 
-  /**
-   * This function control the move of snake
-   * @param e an ActionEvent object, processing individual mouse movements and mouse clicks
-   */
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    //System.out.println("alarm fired");
-    //We reach here every time the alarm fires.
-    snakeMove(snake_loc, 1);
-    if(playerNumber == 2) {
-      snakeMove(snake2_loc, 2);
-    }
-    // Call repaint, which further invokes `paintComponent`.
-    repaint();
-  }
 
   /**
    * This function regenerate a random location for the apple in panel range
@@ -329,9 +304,9 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
   private void regenApple() {
     // Random location within the panel.
     int new_x = rnd.nextInt(
-        SnakeGameControllerWindow.panelFrame, SnakeGameControllerWindow.panelWidth - SnakeGameControllerWindow.panelFrame);
-    int new_y = rnd.nextInt(SnakeGameControllerWindow.panelFrame + title.getHeight(null),
-        title.getHeight(null) + SnakeGameControllerWindow.panelHeight - SnakeGameControllerWindow.panelFrame);
+        OptionView.panelFrame, OptionView.panelWidth - OptionView.panelFrame);
+    int new_y = rnd.nextInt(OptionView.panelFrame + title.getHeight(null),
+        title.getHeight(null) + OptionView.panelHeight - OptionView.panelFrame);
     // Round the location to dot_size.
     apple_loc = new Coordinate((new_x / dot_size) * dot_size, (new_y / dot_size) * dot_size);
     System.out.println(
@@ -342,50 +317,11 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
    * The game will restart once the game was over and the user pressed SPACE.
    */
   private void restart(){
-    gameoverP1 = false;
-    gameoverP2 = false;
-    player1Attack = false;
-    player2Attack = false;
-    score1 = 0;
-    score2 = 0;
-    //Initialize snake1
-    snake_loc = new ArrayList<>();
-    snake_loc.add(new Coordinate(400, 400));
-    snake_loc.add(new Coordinate(400 + dot_size, 400));
-    snake_loc.add(new Coordinate(400 + 2 * dot_size, 400));
-    //Initialize snake2
-    snake2_loc = new ArrayList<>();
-    snake2_loc.add(new Coordinate(300, 300));
-    snake2_loc.add(new Coordinate(300 + dot_size, 300));
-    snake2_loc.add(new Coordinate(300 + 2 * dot_size, 300));
-    direction1 = Direction.UP;
-    direction2 = Direction.LEFT;
+    setUp();
     timer.start();
   }
 
-  /**
-   * keyTyped is fired when a key is pressed that can be converted into a unicode character. The
-   * basic idea is that keyTyped is used to find characters that are typed. For this game, we don't
-   * need any keycode except up/down/left/right to control the snake, so that it will do nothing if
-   * receive keyTyped
-   *
-   * @param e a KeyEvent object
-   */
-  @Override
-  public void keyTyped(KeyEvent e) {
-    // do nothing
-  }
-
-  /**
-   * This function read the keyboard action, it is used for obtain raw key presses. For this game,
-   * the direction will change based on when which key (up/down/left/right) is received from the
-   * keyboard,
-   * This is part of the Controller of the Snake Game
-   * @param e a KeyEvent object
-   */
-  @Override
-  public void keyPressed(KeyEvent e) {
-    int keyCode = e.getKeyCode();
+  public void directionUpdated(int keyCode){
     if (keyCode == KeyEvent.VK_UP) {
       // up key is pressed
       direction1 = Direction.UP;
@@ -417,15 +353,6 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
     if(keyCode == KeyEvent.VK_SPACE){
       restart();
     }
-  }
-
-  /**
-   * For this game, do nothing if keyboard is released.
-   * @param e a KeyEvent object
-   */
-  @Override
-  public void keyReleased(KeyEvent e) {
-    // do nothing
   }
 
   /**
@@ -506,9 +433,9 @@ public class SnakeGameModel extends JPanel implements ActionListener, KeyListene
   private boolean player2Attack = false;
   List<Coordinate> snake_loc;
   List<Coordinate> snake2_loc;
-  private Timer timer;
+  public Timer timer;
   public static int difficulty;
   public static int playerNumber;
-  public static int timerEasy = 400;   // if it's easy mode, timer is 300 ms
+  public static int timerEasy = 400;   // if it's easy mode, timer is 400 ms
   public static int timerHard = 150;   // if it's hard mode, timer is 150 ms
 }
