@@ -15,16 +15,13 @@ import javax.swing.border.EmptyBorder;
 
 /**
  *  <Purpose of the file>
- * Includes one option window as View of Snake Game, and three listeners as Controller of Snake Game.
+ * It is the option window as View of Snake Game
  */
 public class OptionView extends JFrame {
   public static JComboBox playerBox;
   public static JComboBox difficultyModeBox;
-  public static int difficultyLevel;
-  public static int numPlayer;
   private JButton start;
 
-  public static JFrame optionFrame;
   public static final int frameWidth = 700;  // width of the frame container
   public static final int frameHeight = 800; // height of the frame container
   public static final int panelWidth = 700;  // 600 + panelframe * 2

@@ -3,12 +3,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.AWTException;
-import java.awt.Dimension;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JFrame;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -16,23 +13,26 @@ import org.junit.Test;
  */
 public class SnakeGameTest {
   private SnakeGameModel model;
-  private OptionView controlWindow;
+  private GameControllerForTest controller;
   private Robot robot;
 
-  @org.junit.Before
+  @Before
   public void setUp() throws Exception {
-  //  controlWindow = new SnakeGameControllerWindow();
-    JFrame frame = new JFrame();
-    frame.setSize(700,800);
-    model = new SnakeGameModel();
-    model.setPreferredSize(new Dimension(700,700));
-    frame.add(model);
-    frame.setVisible(true);
+    controller = new GameControllerForTest(1,1);
+    controller.gameStart();
+    model = controller.model;
+
+//    JFrame frame = new JFrame();
+//    frame.setSize(700,800);
+//    model = new SnakeGameModel();
+//    model.setPreferredSize(new Dimension(700,700));
+//    frame.add(model);
+//    frame.setVisible(true);
     robot = new Robot();
   }
 
   /**
-   * test for the original data
+   * Test for the original data
    */
   @Test
   public void originalDataTest() {
@@ -47,20 +47,36 @@ public class SnakeGameTest {
     assertEquals(Direction.UP,model.getDirection1());
   }
 
+
+  /**
+   * Test if the direction of snake will be updated according to input
+   * @throws AWTException
+   * @throws InterruptedException
+   */
   @Test
-  public void directionTest() throws AWTException, InterruptedException {
-    robot.keyPress(KeyEvent.VK_LEFT);
+  public void directionUpdatedTest() throws AWTException, InterruptedException {
     model.directionUpdated(KeyEvent.VK_LEFT);
- //   System.out.println(KeyEvent.VK_LEFT);
-//    long start = System.nanoTime();
-//    long end = start = TimeUnit.SECONDS.toNanos(100);
+    assertEquals(Direction.LEFT,model.getDirection1());
+    model.directionUpdated(KeyEvent.VK_UP);
+    assertEquals(Direction.UP,model.getDirection1());
+  }
+
+  @Test
+  public void directionListenerTest() throws AWTException, InterruptedException {
+    controller = new GameControllerForTest(1,1);
+    controller.gameStart();
+    model = controller.model;
+
+     robot = new Robot();
+     robot.keyPress(KeyEvent.VK_LEFT);
+//     System.out.println(KeyEvent.VK_LEFT);
 //    try{Thread.sleep(400);} catch (InterruptedException e) {
 //      e.printStackTrace();
 //    }
 //    while(System.nanoTime() < end){
 //    }
-//    Thread.sleep(100);
-//    robot.keyRelease(KeyEvent.VK_LEFT);
+    Thread.sleep(200);
+    robot.keyRelease(KeyEvent.VK_LEFT);
     Thread.sleep(200);
     assertEquals(Direction.LEFT,model.getDirection1());
   }
@@ -69,11 +85,13 @@ public class SnakeGameTest {
    * test if the score increase after snake's head overlap the apple
    */
   @Test
-  public void snakeEatsApple(){
-    List<Coordinate> snake_loc = snake_loc = new ArrayList<>();
-    snake_loc.add(new Coordinate(200, 200));
-    snake_loc.add(new Coordinate(200 + 25, 200));
-    model.snake_loc = snake_loc;
+  public void ifsnakeEatsAppleTest() throws InterruptedException {
+//    List<Coordinate> snake_loc = snake_loc = new ArrayList<>();
+//    snake_loc.add(new Coordinate(200, 200));
+//    snake_loc.add(new Coordinate(200 + 25, 200));
+//    model.snake_loc = snake_loc;
+    model.setApple_loc(400,375);
+    Thread.sleep(400);
     assertEquals(1,model.getScore1());
 
   }

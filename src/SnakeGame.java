@@ -15,10 +15,10 @@
  *
  */
 public class SnakeGame {
-  static Controller game;
+  static GameController game;
 
   public static void main(String[] args) {
-    game = new Controller();
+    game = new GameController();
   }
 }
 

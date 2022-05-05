@@ -297,6 +297,9 @@ public class SnakeGameModel extends JPanel  {
 
   }
 
+  public void setApple_loc(int x, int y){
+    apple_loc = new Coordinate((x / dot_size) * dot_size,(y / dot_size) * dot_size);
+  }
 
   /**
    * This function regenerate a random location for the apple in panel range
@@ -321,6 +324,11 @@ public class SnakeGameModel extends JPanel  {
     timer.start();
   }
 
+  /**
+   * Once the keyboard listener in the Controller obtains a keyEvent, it will call this function
+   * and pass the keyCode into this function to change the direction of snake
+   * @param keyCode an integer presents different keyEvent of keyboard
+   */
   public void directionUpdated(int keyCode){
     if (keyCode == KeyEvent.VK_UP) {
       // up key is pressed

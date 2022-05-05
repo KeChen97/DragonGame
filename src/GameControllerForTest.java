@@ -1,29 +1,37 @@
-import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.Timer;
-import org.ietf.jgss.GSSName;
 
-public class Controller implements ActionListener, KeyListener {
+/**
+ * <Purpose of the file>
+ * This controller is just for JUnit Test, since we need pass the difficulty and playerNumber into it without manually click
+ */
+public class GameControllerForTest implements IGameController, ActionListener, KeyListener {
   JFrame frame;
   OptionView optionView;
   SnakeGameModel model;
+  int difficulty;
+  int playerNumber;
 
-
-  public Controller() {
+  /**
+   * Constructor of controller just for test
+   * it will create a new OptionWindow, which is the View user can input options of the game
+   * @param difficulty an integer got from the tester input
+   * @param playerNumber an integer got from the tester input
+   */
+  public GameControllerForTest(int difficulty, int playerNumber) {
     this.optionView = new OptionView();
-    this.frame = new JFrame();
+    this.difficulty = difficulty;
+    this.playerNumber = playerNumber;
   }
 
-  public void go(){
+  @Override
+  public void gameStart() {
+    this.frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(OptionView.frameWidth,OptionView.frameHeight);
     // Create the game model
@@ -33,6 +41,9 @@ public class Controller implements ActionListener, KeyListener {
     frame.setTitle("Snake Game by kk");
     frame.setVisible(true);
     optionView.setVisible(false);
+
+   model.setDifficulty(this.difficulty);
+   model.setPlayerNumber(this.playerNumber);
 
     // set up the alarm, which fires periodically (16 ms == 60fps).
     // the time period depends on the difficulty level
@@ -50,8 +61,8 @@ public class Controller implements ActionListener, KeyListener {
     // register this panel as the keyboard event listener.
     model.setFocusable(true);
     model.addKeyListener(this);
-  }
 
+  }
 
   /**
    * This function control the move of snake
@@ -104,48 +115,4 @@ public class Controller implements ActionListener, KeyListener {
     // do nothing
   }
 }
-
-/**
- *This ItemListener reads the user's choice for difficulty
- * It's part of the controller to take and handle input from user, and ask model to mutate depending on inputs.
- */
-class difficultyListener implements ItemListener{
-
-  @Override
-  public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-      System.out.println("Game Difficulty:" + OptionView.difficultyModeBox.getSelectedItem());
-      int difficulty = OptionView.difficultyModeBox.getSelectedIndex();
-      SnakeGameModel.setDifficulty(difficulty);
-    }
-  }
-}
-
-/**
- * This ItemListener reads the user's choice for difficulty
- * It's part of the controller to take and handle input from user, and ask model to mutate depending on inputs.
- */
-class playerNumListener implements ItemListener {
-
-  @Override
-  public void itemStateChanged(ItemEvent e) {
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-      System.out.println("Number of player is:" + OptionView.playerBox.getSelectedIndex());
-      int playerNumber = OptionView.playerBox.getSelectedIndex();
-      SnakeGameModel.setPlayerNumber(playerNumber);
-    }
-  }
-}
-
-/**
- * This ActionListener launch the snake game.
- * It's part of the controller to ask to display current state of model.
- */
-class StartAction implements ActionListener {
-
-  public void actionPerformed(final ActionEvent e) {
-    SnakeGame.game.go();
-  }
-}
-
 
