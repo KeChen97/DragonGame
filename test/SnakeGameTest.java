@@ -95,5 +95,4 @@ public class SnakeGameTest {
     assertEquals(1,model.getScore1());
 
   }
-
 }
