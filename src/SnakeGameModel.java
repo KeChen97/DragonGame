@@ -26,13 +26,13 @@ public class SnakeGameModel extends JPanel  {
   public SnakeGameModel() {
     // Load the image
     try {
-      background = ImageIO.read(new File("/Users/chen/Downloads/backg5.png"));
-      title = ImageIO.read(new File("/Users/chen/Downloads/title2.png"));
-      apple_image = ImageIO.read(new File("/Users/chen/Downloads/heart.png"));
-      snake_head_image = ImageIO.read(new File("/Users/chen/Downloads/snakehead.png"));
-      snake_body_image = ImageIO.read(new File("/Users/chen/Downloads/snakebody.png"));
-      snake2_head_image = ImageIO.read(new File("/Users/chen/Downloads/snakehead22.png"));
-      snake2_body_image = ImageIO.read(new File("/Users/chen/Downloads/snakebody2.png"));
+      background = ImageIO.read(new File("./images/background.png"));
+      title = ImageIO.read(new File("./images/title.png"));
+      apple_image = ImageIO.read(new File("./images/heart.png"));
+      snake_head_image = ImageIO.read(new File("./images/snakehead.png"));
+      snake_body_image = ImageIO.read(new File("./images/snakebody.png"));
+      snake2_head_image = ImageIO.read(new File("./images/snakehead22.png"));
+      snake2_body_image = ImageIO.read(new File("./images/snakebody2.png"));
     } catch (Exception e) {
       System.out.println("url doesn't work");
     }
